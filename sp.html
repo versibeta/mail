@@ -2,103 +2,168 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Surat Pernyataan</title>
+
 <style>
-    body {
-        font-family: "Times New Roman", serif;
-        line-height: 1.6;
-        margin: 40px;
-    }
+body {
+    font-family: "Times New Roman", serif;
+    margin: 30px;
+}
 
-    .container {
-        max-width: 800px;
-        margin: auto;
-    }
+.container {
+    max-width: 800px;
+    margin: auto;
+}
 
-    h2 {
-        text-align: center;
-        text-decoration: underline;
-        margin-bottom: 30px;
-    }
+h2 {
+    text-align: center;
+    text-decoration: underline;
+}
 
-    p {
-        text-align: justify;
-    }
+.signature {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 3cm;
+    margin-top: 60px;
+}
 
-    .content {
-        margin-top: 20px;
-    }
+.signature-right {
+    width: 300px;
+    text-align: center;
+}
 
-    .signature {
-        width: 100%;
-        margin-top: 60px;
-    }
+.ttd {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
 
-    .signature-right {
-        width: 300px;
-        float: right;
-        text-align: center;
-    }
+/* Canvas */
+.canvas-box {
+    border: 1px solid #000;
+    width: 300px;
+    height: 120px;
+    margin-bottom: 10px;
+    touch-action: none;
+}
 
-    .ttd {
-        height: 80px;
-        margin: 10px 0;
-    }
+.no-print {
+    margin-bottom: 20px;
+}
 
-    @media print {
-        body {
-            margin: 2cm;
-        }
+@media print {
+    .no-print {
+        display: none;
     }
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
-    <h2>SURAT PERNYATAAN</h2>
 
-    <div class="content">
-        <p>Saya yang bertanda tangan di bawah ini:</p>
+<div class="no-print">
+    <p><strong>Tanda Tangan:</strong></p>
 
-        <p>
-            Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Benny Suryono<br>
-            Alamat &nbsp;&nbsp;: Bogor
-        </p>
+    <canvas id="canvas" class="canvas-box"></canvas><br>
 
-        <p>
-            Dengan ini menyatakan bahwa saya menyanggupi untuk membayar cicilan setiap bulan sebesar 
-            <strong>Rp750.000,-</strong>.
-        </p>
+    <button onclick="clearCanvas()">Hapus</button>
+    <button onclick="saveTTD()">OK</button>
+    <button onclick="window.print()">Print / PDF</button>
+</div>
 
-        <p>
-            Pembayaran akan dilakukan setiap bulan sampai lunas atas pembelian laptop seharga 
-            <strong>Rp12.299.000,-</strong>.
-        </p>
+<h2>SURAT PERNYATAAN</h2>
 
-        <p>
-            Spesifikasi:<br>
-            LENOVO IDEAPAD SLIM 3 14ARP10<br>
-            RYZEN 7 7735HS 16GB 512GB SSD
-        </p>
+<p>Saya yang bertanda tangan di bawah ini:</p>
 
-        <p>
-            Demikian pernyataan ini dibuat dengan sebenar-benarnya.
-        </p>
+<p>
+Nama : Benny Suryono<br>
+Alamat : Bogor
+</p>
+
+<p>
+Saya menyanggupi membayar cicilan sebesar <strong>Rp750.000,-</strong>.
+</p>
+
+<p>
+Pembelian laptop sebesar <strong>Rp12.299.000,-</strong>.
+</p>
+
+<div class="signature">
+    <div class="signature-right">
+        <p>Bogor, 15 April 2026</p>
+        <p class="nowrap">Yang menyatakan,</p>
+
+        <img id="hasilTTD" class="ttd">
+
+        <p><strong><span class="nowrap">( Benny Suryono )</span></strong></p>
     </div>
-
-    <div class="signature">
-        <div class="signature-right">
-            <p>Bogor, 15 April 2026</p>
-            <p>Yang menyatakan,</p>
-
-            <!-- GANTI src DENGAN FILE TANDA TANGAN ANDA -->
-            <img src="ttd.png" alt="Tanda Tangan" class="ttd">
-
-            <p><strong>( Benny Suryono )</strong></p>
-        </div>
-    </div>
+</div>
 
 </div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let drawing = false;
+
+// ukuran canvas fix biar tidak blur
+canvas.width = 300;
+canvas.height = 120;
+
+// mulai gambar
+canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousemove", draw);
+
+// support HP
+canvas.addEventListener("touchstart", () => drawing = true);
+canvas.addEventListener("touchend", () => drawing = false);
+canvas.addEventListener("touchmove", drawTouch);
+
+function draw(e) {
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function drawTouch(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    const y = e.touches[0].clientY - rect.top;
+
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+// hapus
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// simpan ke base64
+function saveTTD() {
+    const base64 = canvas.toDataURL("image/png");
+    document.getElementById("hasilTTD").src = base64;
+
+    console.log("Base64:", base64);
+}
+</script>
 
 </body>
 </html>
