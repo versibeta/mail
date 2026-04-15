@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Bikin langsung tanda tangan di layar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO dasar -->
+<meta name="description" content="Surat pernyataan pembayaran cicilan oleh Benny Suryono untuk pembelian laptop Lenovo IdeaPad Slim 3.">
+
+<!-- Open Graph (WA, FB, dll) -->
+<meta property="og:title" content="js kode untuk bisa tanda tangan langsung di layar.">
+<meta property="og:description" content="upload gambar juga bisa dilakukan pada pilihan dan langsung terkonversi ke mode base64.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://versibeta.github.io">
+<meta property="og:image" content="https://versibeta.github.io/kode/IMG_20260416_020440.jpg">
+
+<style>
+body { font-family: "Times New Roman"; margin: 30px; }
+
+.container { max-width: 800px; margin: auto; }
+
+.signature {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 3cm;
+    margin-top: 60px;
+}
+
+.signature-right {
+    width: 300px;
+    text-align: center;
+}
+
+.ttd {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+
+.canvas-box {
+    border: 1px solid #000;
+    width: 300px;
+    height: 120px;
+    touch-action: none;
+}
+
+.no-print { margin-bottom: 20px; }
+
+@media print {
+    .no-print { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="no-print">
+    <p><strong>Tanda Tangan:</strong></p>
+
+    <!-- Upload -->
+    <label for="uploadTTD" style="cursor:pointer;background:#333;color:#fff;padding:6px 12px;border-radius:5px;">
+        Ambil Gambar
+    </label>
+    <input type="file" id="uploadTTD" accept="image/*" hidden>
+
+    <br><br>
+
+    <!-- Canvas -->
+    <canvas id="canvas" class="canvas-box"></canvas><br>
+
+    <button onclick="clearCanvas()">Hapus</button>
+    <button onclick="saveTTD()">OK</button>
+    <button onclick="window.print()">Print</button>
+</div>
+
+
+        <h2>judulin</h2>
+
+    <div class="content">
+        <p>Lorem ipsum dolor sit amet:</p>
+
+        <p>
+            id: tanda tangan<br>
+            vt: di tempat
+        </p>
+
+    </div>
+
+
+
+    
+
+
+<div class="signature">
+    <div class="signature-right">
+
+        <img id="hasilTTD" class="ttd">
+
+        <p><strong>( ben )</strong></p>
+    </div>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 300;
+canvas.height = 120;
+
+let drawing = false;
+
+// ===== DRAW =====
+canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mouseup", () => {
+    drawing = false;
+    ctx.beginPath();
+});
+canvas.addEventListener("mousemove", draw);
+
+canvas.addEventListener("touchstart", () => drawing = true);
+canvas.addEventListener("touchend", () => {
+    drawing = false;
+    ctx.beginPath();
+});
+canvas.addEventListener("touchmove", drawTouch);
+
+function draw(e) {
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function drawTouch(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    const y = e.touches[0].clientY - rect.top;
+
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+// ===== CLEAR =====
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("hasilTTD").src = "";
+}
+
+// ===== SAVE CANVAS =====
+function saveTTD() {
+    const base64 = canvas.toDataURL("image/png");
+    document.getElementById("hasilTTD").src = base64;
+}
+
+// ===== UPLOAD =====
+document.getElementById("uploadTTD").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const img = new Image();
+
+        img.onload = function() {
+            // clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // hitung rasio biar tidak gepeng
+            const ratio = Math.min(
+                canvas.width / img.width,
+                canvas.height / img.height
+            );
+
+            const newWidth = img.width * ratio;
+            const newHeight = img.height * ratio;
+
+            const x = (canvas.width - newWidth) / 2;
+            const y = (canvas.height - newHeight) / 2;
+
+            // gambar ke canvas
+            ctx.drawImage(img, x, y, newWidth, newHeight);
+
+            // juga tampilkan ke surat
+            document.getElementById("hasilTTD").src = canvas.toDataURL("image/png");
+        };
+
+        img.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+</body>
+</html>
