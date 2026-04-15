@@ -11,20 +11,7 @@
       margin: 40px;
       max-width: 800px;
     }
-
-  @media print {
-  @page {
-    size: A4;
-    margin: 2cm;
-  }
-}
-
-    @media print {
-  .page-break {
-    page-break-before: always;
-  }
-}
-    
+  
     h1 {
       text-align: left;
       font-size: 20px;
@@ -53,6 +40,16 @@
       cursor: pointer;
     }
     @media print {
+
+@page {
+    size: A4;
+    margin: 2cm;
+  }
+      
+  .pasal {
+    page-break-inside: avoid;
+  }
+
       button {
         display: none;
       }
@@ -104,7 +101,7 @@ Rp [jumlah uang] ([terbilang]).</p>
   <li>Pembayaran dilakukan secara rutin dengan komunikasi terbuka antara kedua pihak</li>
 </ul>
 
-<div class="pasal page-break">
+<div class="pasal">
 
   
 <h3>Pasal 6 – Fleksibilitas Pembayaran</h3>
