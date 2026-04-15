@@ -1,159 +1,147 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Surat Kesepakatan Pinjaman</title>
-  <style>
+<meta charset="UTF-8">
+<title>Surat Pernyataan</title>
+<style>
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 40px;
-      max-width: 800px;
+        font-family: "Times New Roman", serif;
+        line-height: 1.6;
+        margin: 40px;
     }
-  
-    h1 {
-      text-align: left;
-      font-size: 20px;
-    }
-h3 {
-  page-break-after: avoid;
-  break-after: avoid;
-}
 
-h3, 
-h3 + p, 
-h3 + ul {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-    
-    h3 {
-      margin-top: 20px;
-  margin-bottom: 0;
-}
-
-h3 + * {
-  margin-top: 0;
-}
-    
-    .section {
-      margin-bottom: 16px;
+    .container {
+        max-width: 800px;
+        margin: auto;
     }
-    
+
+    h2 {
+        text-align: center;
+        text-decoration: underline;
+        margin-bottom: 30px;
+    }
+
+    p {
+        text-align: justify;
+    }
+
+    .content {
+        margin-top: 20px;
+    }
+
     .signature {
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
+        
+        width: 100%;
+        margin-top: 60px;
     }
-    .signature div {
-      width: 45%;
-      text-align: left;
+    
+.signature-right {
+    width: 300px;
+    float: right;
+    text-align: center;
+    padding-right: 20px;
+}
+    .signature-right {
+        width: 300px;
+        float: right;
+        text-align: center;
     }
-    button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 10px 16px;
-      font-size: 14px;
-      cursor: pointer;
+
+    .ttd {
+        height: 80px;
+        margin: 10px 0;
+    }
+
+    .no-print {
+        margin-bottom: 20px;
     }
 
     @media print {
-  button {
-        display: none;
-      }
-      body {
-        margin: 20px;
-      }
+        .no-print {
+            display: none;
+        }
+
+        body {
+            margin: 2cm;
+        }
     }
-  </style>
+</style>
 </head>
 <body>
 
-<button onclick="window.print()">Print</button>
+<div class="container">
 
-<h1><strong>SURAT KESEPAKATAN PINJAMAN KEKELUARGAAN TANPA BUNGA</strong></h1>
+    <!-- Upload TTD (tidak ikut ke print) -->
+    <div class="no-print">
+        <label><strong>Upload Tanda Tangan:</strong></label><br>
+        <input type="file" id="uploadTTD">
+        <br><br>
+        <button onclick="window.print()">Print / Save PDF</button>
+    </div>
 
-<p>Pada hari ini, [hari], tanggal [tanggal/bulan/tahun], kami yang bertanda tangan di bawah ini:</p>
+    <h2>SURAT PERNYATAAN</h2>
 
-<div class="section">
-  <strong>Pihak Pertama (Pemberi Pinjaman):</strong><br />
-  Nama: [Nama Saudara]<br />
-  Alamat: [Alamat Lengkap]
+    <div class="content">
+        <p>Saya yang bertanda tangan di bawah ini:</p>
+
+        <p>
+            Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Benny Suryono<br>
+            Alamat &nbsp;&nbsp;: Bogor
+        </p>
+
+        <p>
+            Dengan ini menyatakan bahwa saya menyanggupi untuk membayar cicilan setiap bulan sebesar 
+            <strong>Rp750.000,-</strong>.
+        </p>
+
+        <p>
+            Pembayaran akan dilakukan setiap bulan sampai lunas atas pembelian laptop seharga 
+            <strong>Rp12.299.000,-</strong>.
+        </p>
+
+        <p>
+            Spesifikasi:<br>
+            LENOVO IDEAPAD SLIM 3 14ARP10<br>
+            RYZEN 7 7735HS 16GB 512GB SSD
+        </p>
+
+        <p>
+            Demikian pernyataan ini dibuat dengan sebenar-benarnya.
+        </p>
+    </div>
+
+    <div class="signature">
+        <div class="signature-right">
+            <p>Bogor, 15 April 2026</p>
+            <p>Yang menyatakan,</p>
+
+            <!-- IMG akan diisi otomatis -->
+            <img id="ttdPreview" class="ttd">
+
+            <p><strong>( Benny Suryono )</strong></p>
+        </div>
+    </div>
+
 </div>
 
-<div class="section">
-  <strong>Pihak Kedua (Penerima Pinjaman):</strong><br />
-  Nama: [Nama Anda]<br />
-  Alamat: [Alamat Lengkap]
-</div>
+<script>
+document.getElementById("uploadTTD").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-<p>Dengan ini sepakat mengadakan perjanjian pinjaman atas dasar kepercayaan, kekeluargaan, dan itikad baik, dengan ketentuan sebagai berikut:</p>
+    const reader = new FileReader();
 
-<h3>Pasal 1 – Jumlah Pinjaman</h3>
-<p>Pihak Pertama memberikan pinjaman kepada Pihak Kedua sebesar:<br />
-Rp [jumlah uang] ([terbilang]).</p>
+    reader.onload = function() {
+        // tampilkan gambar ke surat
+        document.getElementById("ttdPreview").src = reader.result;
 
-<h3>Pasal 2 – Tujuan Penggunaan</h3>
-<p>Pinjaman digunakan untuk pembelian komputer/perangkat kerja guna mendukung upaya memperoleh penghasilan.</p>
+        // kalau mau lihat base64
+        console.log("Base64:", reader.result);
+    };
 
-<h3>Pasal 3 – Tanpa Bunga</h3>
-<p>Pinjaman ini diberikan tanpa bunga (0%).</p>
-
-<h3>Pasal 4 – Masa Tenggang (Grace Period)</h3>
-<p>Pihak Kedua diberikan masa tenggang selama [2–3 bulan] sejak dana diterima, di mana belum diwajibkan melakukan pembayaran, untuk memberikan kesempatan mempersiapkan atau memperoleh penghasilan.</p>
-
-<h3>Pasal 5 – Mekanisme Pengembalian</h3>
-<ul>
-  <li>Pembayaran dilakukan secara cicilan dengan nominal yang disesuaikan dengan kemampuan Pihak Kedua</li>
-  <li>Estimasi cicilan awal: Rp [opsional]</li>
-  <li>Pembayaran dilakukan secara rutin dengan komunikasi terbuka antara kedua pihak</li>
-</ul>
-
-<div class="pasal">
-
-  
-<h3>Pasal 6 – Fleksibilitas Pembayaran</h3>
-<ul>
-  <li>Pembayaran dapat disesuaikan jumlah dan waktunya</li>
-  <li>Pihak Kedua wajib tetap berkomunikasi secara jujur kepada Pihak Pertama</li>
-  <li>Kedua pihak sepakat mengutamakan musyawarah</li>
-</ul>
-
-  
-</div>
-  
-<h3>Pasal 7 – Komitmen Pihak Kedua</h3>
-<ul>
-  <li>Menggunakan dana secara bertanggung jawab</li>
-  <li>Berusaha aktif memperoleh penghasilan</li>
-  <li>Mengembalikan pinjaman secara bertahap</li>
-</ul>
-
-<h3>Pasal 8 – Ketentuan Barang & Jaminan</h3>
-<ul>
-  <li>Pihak Kedua tidak diperkenankan menjual komputer/perangkat kerja yang dibeli dari dana pinjaman ini selama pinjaman belum lunas.</li>
-  <li>Komputer/perangkat kerja tersebut menjadi jaminan. Apabila terjadi kendala dalam pengembalian, Pihak Pertama dapat menarik atau menjual barang tersebut dengan pemberitahuan kepada Pihak Kedua.</li>
-</ul>
-
-<h3>Pasal 9 – Penutup</h3>
-<p>Perjanjian ini dibuat dengan kesadaran penuh tanpa paksaan dari pihak manapun, serta dilandasi rasa saling percaya dan kekeluargaan.</p>
-
-<p>Demikian surat ini dibuat untuk dipahami dan disepakati bersama.</p>
-
-<p>[Tempat], [Tanggal]</p>
-
-<div class="signature">
-  <div>
-    Pihak Pertama,<br /><br /><br /><br />
-    (tanda tangan & nama jelas)
-  </div>
-  <div>
-    Pihak Kedua,<br /><br /><br /><br />
-    (tanda tangan & nama jelas)
-  </div>
-</div>
+    reader.readAsDataURL(file);
+});
+</script>
 
 </body>
 </html>
