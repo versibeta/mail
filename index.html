@@ -79,7 +79,20 @@
         height: 70px;
     }
 }
+.btn-upload {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
 
+.btn-upload:hover {
+    background: #555;
+}
+    
     
     @media print {
         .no-print {
@@ -102,7 +115,9 @@
     <!-- Upload TTD (tidak ikut ke print) -->
     <div class="no-print">
         <label><strong>Upload Tanda Tangan:</strong></label><br>
-        <input type="file" id="uploadTTD">
+<label for="uploadTTD" class="btn-upload">Ambil Gambar</label>
+<input type="file" id="uploadTTD" accept="image/*" capture="environment" hidden>
+
         <br><br>
         <button onclick="window.print()">Print / Save PDF</button>
     </div>
@@ -113,8 +128,8 @@
         <p>Saya yang bertanda tangan di bawah ini:</p>
 
         <p>
-            Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Benny Suryono<br>
-            Alamat &nbsp;&nbsp;: Bogor
+            Nama: Benny Suryono<br>
+            Alamat: Bogor
         </p>
 
         <p>
