@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surat Pernyataan</title>
+
+<style>
+body {
+    font-family: "Times New Roman", serif;
+    margin: 30px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.signature {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 3cm;
+    margin-top: 60px;
+}
+
+.signature-right {
+    width: 300px;
+    text-align: center;
+}
+
+.ttd {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+
+.canvas-box {
+    border: 1px solid #000;
+    width: 300px;
+    height: 120px;
+    touch-action: none;
+}
+
+.no-print {
+    margin-bottom: 20px;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="no-print">
+    <p><strong>Pilih cara tanda tangan:</strong></p>
+
+    <!-- Upload -->
+    <label for="uploadTTD" style="cursor:pointer;background:#333;color:#fff;padding:6px 12px;border-radius:5px;">
+        Ambil Gambar
+    </label>
+    <input type="file" id="uploadTTD" accept="image/*" hidden>
+
+    <br><br>
+
+    <!-- Canvas -->
+    <canvas id="canvas" class="canvas-box"></canvas><br>
+
+    <button onclick="clearCanvas()">Hapus</button>
+    <button onclick="saveTTD()">OK</button>
+    <button onclick="window.print()">Print / PDF</button>
+</div>
+
+<h2>SURAT PERNYATAAN</h2>
+
+<p>Saya yang bertanda tangan di bawah ini:</p>
+
+<p>
+Nama : Benny Suryono<br>
+Alamat : Bogor
+</p>
+
+<p>
+Saya menyanggupi membayar cicilan sebesar <strong>Rp750.000,-</strong>.
+</p>
+
+<p>
+Pembelian laptop sebesar <strong>Rp12.299.000,-</strong>.
+</p>
+
+<div class="signature">
+    <div class="signature-right">
+        <p>Bogor, 15 April 2026</p>
+        <p class="nowrap">Yang menyatakan,</p>
+
+        <img id="hasilTTD" class="ttd">
+
+        <p><strong><span class="nowrap">( Benny Suryono )</span></strong></p>
+    </div>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let drawing = false;
+
+// set ukuran canvas
+canvas.width = 300;
+canvas.height = 120;
+
+// DRAW (mouse)
+canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousemove", draw);
+
+// DRAW (touch)
+canvas.addEventListener("touchstart", () => drawing = true);
+canvas.addEventListener("touchend", () => drawing = false);
+canvas.addEventListener("touchmove", drawTouch);
+
+function draw(e) {
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function drawTouch(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    const y = e.touches[0].clientY - rect.top;
+
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+// hapus canvas
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// tombol OK → pakai canvas
+function saveTTD() {
+    const base64 = canvas.toDataURL("image/png");
+    document.getElementById("hasilTTD").src = base64;
+    console.log("Dari Canvas:", base64);
+}
+
+// upload → override canvas
+document.getElementById("uploadTTD").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        document.getElementById("hasilTTD").src = reader.result;
+        console.log("Dari Upload:", reader.result);
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+</body>
+</html>
