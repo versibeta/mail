@@ -63,19 +63,18 @@ body { font-family: "Times New Roman"; margin: 30px; }
     <p><strong>Tanda Tangan:</strong></p>
 
     <!-- Upload -->
-    <label for="uploadTTD" style="cursor:pointer;background:#333;color:#fff;padding:6px 12px;border-radius:5px;">
-        Ambil Gambar
-    </label>
-    <input type="file" id="uploadTTD" accept="image/*" hidden>
-
-    <br><br>
-
-    <!-- Canvas -->
+    
+    <br>
     <canvas id="canvas" class="canvas-box"></canvas><br>
 
     <button onclick="clearCanvas()">Hapus</button>
     <button onclick="saveTTD()">OK</button>
     <button onclick="window.print()">Print</button>
+    <label for="uploadTTD" style="cursor:pointer;background:#333;color:#fff;padding:6px 12px;border-radius:5px;">
+        Ambil Gambar
+    </label>
+    <input type="file" id="uploadTTD" accept="image/*" hidden>
+
 </div>
 
     <h2>SURAT PERNYATAAN</h2>
